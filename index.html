@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sprite animation</title>
+    <script src="main.js"></script>
+    <script src="linesConnect.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="heart.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Madimi+One&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="heartContainer" style="visibility: hidden;">
+        <div class="heart" style="visibility: hidden;">
+            <div class="c1 gold"> </div>
+            <div class="c2 gold"> </div>
+            <div class="r gold"> </div>
+        </div>
+        <div class="heart" style="visibility: hidden;">
+            <div class="c1 red"> </div>
+            <div class="c2 red"> </div>
+            <div class="r red"> </div>
+        </div>
+        <div class="heart" style="visibility: hidden;">
+            <div class="c1 red"> </div>
+            <div class="c2 red"> </div>
+            <div class="r red"> </div>
+        </div>
+    </div>
+    <div id="filler" style="visibility: hidden;">the enemy is attacking counter</div>
+    <canvas id="player">
+    </canvas>
+    <div id="pOrbitContainer" style="visibility: hidden;"></div>
+    <!--<div id="rotatingLetter">A</div>-->
+    </div>
+    <div id="eOrbitContainer" style="visibility: hidden;"></div>
+    <!--<div id="rotatingLetter">A</div>-->
+    </div>
+    <canvas id="enemy"></canvas>
+    <img class="zoom" src="./Lmage/Gametitle.png" alt="">
+    <button class="button-24" id="playBut" role="button" onclick="startCountdown()">Play</button>
+    <div id="countdown" style="display: none;"></div>
+    <div id="ruleset">
+        <div class="rule" id="syn">Syn</div>
+        <div class="rule" id="ant">Ant</div>
+        <div class="rule" id="adj">Adj</div>
+        <div class="rule" id="vb">Vb</div>
+    </div>
+</body>
+
+</html>
