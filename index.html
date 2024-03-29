@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>sprite animation</title>
+    <!--<script src="adjList.js"></script>-->
     <script src="main.js"></script>
-    <script src="linesConnect.js"></script>
+
     <link rel="stylesheet" type="text/css" href="style.css" />
     <link rel="stylesheet" type="text/css" href="heart.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,6 +16,8 @@
 </head>
 
 <body>
+    <canvas id="magicCollision"> </canvas>
+
     <div id="heartContainer" style="visibility: hidden;">
         <div class="heart" style="visibility: hidden;">
             <div class="c1 gold"> </div>
@@ -48,9 +51,9 @@
     <div id="ruleset">
         <div class="rule" id="syn">Syn</div>
         <div class="rule" id="ant">Ant</div>
-        <div class="rule" id="adj">Adj</div>
-        <div class="rule" id="vb">Vb</div>
     </div>
+    <h1 id="gameOver" style="display: none;">Game over</h1>
+    <h1 id="youWin" style="display: none;">You Win</h1>
 </body>
 
 </html>

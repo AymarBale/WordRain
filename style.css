@@ -27,6 +27,17 @@
     }
 }
 
+@keyframes youWinAnimation {
+    0% {
+        text-shadow: 0 0 10px gold, 0 0 0px gold;
+    }
+
+    100% {
+        text-shadow: 0 0 20px gold, 0 0 30px gold, 0 0 40px gold;
+        /* Adjust glow effect */
+    }
+}
+
 @keyframes rotate {
     0% {
         transform: translate(-50%, -50%) rotate(0deg);
@@ -235,4 +246,59 @@ img.zoom:active {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+h1 {
+    font-family: "Madimi One", sans-serif;
+    font-size: 70px;
+    font-weight: 400;
+    font-style: normal;
+    text-align: center;
+    color: #FF0000;
+    text-shadow: 0 0 10px #FF0000, 0 0 20px #FF0000;
+    animation: glowAnimation 2s infinite alternate;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#youWin {
+    font-family: "Madimi One", sans-serif;
+    font-size: 70px;
+    font-weight: 400;
+    font-style: normal;
+    text-align: center;
+    color: #2bff00;
+    text-shadow: 0 0 10px gold, 0 0 20px gold;
+    animation: youWinAnimation 2s infinite alternate;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#magicCollision {
+    position: absolute;
+    width: auto;
+    height: fit-content;
+    /* just for visualization */
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    /* Half of the height */
+    margin-left: -50px;
+    /* Half of the width */
+    z-index: 200000;
+}
+
+@keyframes glowAnimation {
+    0% {
+        text-shadow: 0 0 10px #FF0000, 0 0 0px #FF0000;
+    }
+
+    100% {
+        text-shadow: 0 0 20px #FF0000, 0 0 30px #FF0000, 0 0 40px #FF0000;
+        /* Adjust glow effect */
+    }
 }

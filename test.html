@@ -36,75 +36,42 @@
     </style>
     <script src="mainTest.js"></script>-->
     <style>
-        #heartContainer {
-            height: 180px;
-            width: 60px;
+        .madimi-one-regular {
+            font-family: "Madimi One", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        h1 {
+            font-family: "Madimi One", sans-serif;
+            font-size: 70px;
+            font-weight: 400;
+            font-style: normal;
             text-align: center;
+            color: #2bff00;
+            text-shadow: 0 0 10px gold, 0 0 20px gold;
+            animation: glowAnimation 2s infinite alternate;
             position: absolute;
-            bottom: 0px;
-            left: 30px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
-        .heart {
-            width: 25px;
-            height: 25px;
-            position: relative;
-            margin: auto;
-            transform: rotate(45deg);
-            filter: drop-shadow(0 0 0.5rem #ff00009a);
-            animation: h 3s infinite;
-            margin-bottom: 30px;
-            margin-right: 30px;
-        }
-
-        @keyframes h {
+        @keyframes glowAnimation {
             0% {
-                width: 25px;
-                height: 25px;
-            }
-
-            50% {
-                width: 30px;
-                height: 30px;
+                text-shadow: 0 0 10px gold, 0 0 0px gold;
             }
 
             100% {
-                width: 25px;
-                height: 25px;
+                text-shadow: 0 0 20px gold, 0 0 30px gold, 0 0 40px gold;
+                /* Adjust glow effect */
             }
         }
-
-        .red {
-            position: absolute;
-            width: 66%;
-            height: 66%;
-            background-color: rgb(56, 255, 38);
-        }
-
-        .gold {
-            position: absolute;
-            width: 66%;
-            height: 66%;
-            background-color: gold;
-        }
-
-        .c1 {
-            bottom: 0;
-            left: 0;
-            border-radius: 50%;
-        }
-
-        .c2 {
-            top: 0;
-            right: 0;
-            border-radius: 50%;
-        }
-
-        .r {
-            bottom: 0;
-            right: 0;
-        }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Madimi+One&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
@@ -187,23 +154,7 @@
     <span id="a" class="letter">a</span>
     <span id="b" class="letter">b</span>
     <button onclick="shufflePositions()">Shuffle Positions</button>-->
-    <div id="heartContainer">
-        <div class="heart">
-            <div class="c1 gold"> </div>
-            <div class="c2 gold"> </div>
-            <div class="r gold"> </div>
-        </div>
-        <div class="heart">
-            <div class="c1 red"> </div>
-            <div class="c2 red"> </div>
-            <div class="r red"> </div>
-        </div>
-        <div class="heart">
-            <div class="c1 red"> </div>
-            <div class="c2 red"> </div>
-            <div class="r red"> </div>
-        </div>
-    </div>
+    <h1>You win</h1>
 </body>
 
 </html>

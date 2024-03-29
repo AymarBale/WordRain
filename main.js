@@ -1,23 +1,81 @@
+var spellCol;
 var state = [
     { name: 'playerState', data: ['stare', 'idle', 'attack', 'damage', 'death'] },
     { name: 'enemyState', data: ['stare', 'idle', 'attack', 'damage', 'death'] }
 ]
-var EwordArray = ['ATTACK', 'reservoir', 'interrupt', 'citizen', 'bow']
-var PwordArray = ['orange', 'test', 'restrain', 'hobby', 'lazy'];
+
+var PwordArray = [
+    "big", "hot", "happy", "good", "fast", "tall", "old", "bright", "brave", "clean",
+    "hard", "loud", "strong", "bright", "deep", "heavy", "wide", "long", "rich", "sharp",
+    "sweet", "thick", "wet", "fresh", "smooth", "high", "Mature", "Fascinating", "dark",
+    "empty", "cheap", "safe", "true", "open", "alive", "healthy", "empty", "easy", "far",
+    "happy", "clean", "simple", "clear", "old", "thin", "forward", "narrow", "cheap", "brave",
+    "calm", "Beautiful", "Intelligent", "Brave", "Creative", "Generous", "Honest", "Energetic",
+    "Kind", "Patient", "Talented", "Ambitious", "Confident", "Empathetic", "Reliable", "Optimistic",
+    "Sincere", "Humble", "Compassionate", "Resourceful", "Sociable", "Loyal", "Polite", "Diligent",
+    "Cheerful", "Independent", "Wise", "Charming", "Responsible", "Adventurous", "Versatile", "Considerate",
+    "Punctual", "Understanding", "Enthusiastic", "Courageous", "Decisive", "Diplomatic", "Efficient", "Friendly",
+    "Imaginative", "Motivated", "Organized", "Perceptive", "Reflective", "Resilient", "Respectful", "Tolerant",
+    "Trustworthy"
+];
+
+var EwordArray = [
+    "small", "cold", "sad", "bad", "slow", "short", "young", "dim", "cowardly", "dirty",
+    "soft", "quiet", "weak", "dull", "shallow", "light", "narrow", "short", "poor", "blunt",
+    "sour", "thin", "dry", "stale", "rough", "low", "Immature", "Boring", "light",
+    "full", "expensive", "dangerous", "false", "closed", "dead", "sick", "occupied", "difficult",
+    "near", "unhappy", "messy", "complex", "cloudy", "new", "thick", "backward", "wide", "costly",
+    "timid", "anxious", "Ugly", "Stupid", "Cowardly", "Unimaginative", "Selfish", "Dishonest", "Lethargic",
+    "Mean", "Impatient", "Untalented", "Lazy", "Insecure", "Insensitive", "Unreliable", "Pessimistic",
+    "Insincere", "Arrogant", "Heartless", "Inefficient", "Antisocial", "Disloyal", "Rude", "negligent",
+    "Gloomy", "Dependent", "Foolish", "Uncharming", "Irresponsible", "Cautious", "Unversatile", "Inconsiderate",
+    "late", "Misunderstanding", "Apathetic", "Cowardly", "Indecisive", "Undiplomatic", "Inefficient", "Unfriendly",
+    "Unimaginative", "Unmotivated", "Disorganized", "Unperceptive", "Nonreflective", "Fragile", "Disrespectful", "Intolerant",
+    "Untrustworthy"
+];
+
+var synArray = [
+    "large", "warm", "joyful", "excellent", "quick", "high", "ancient", "brilliant", "courageous", "tidy",
+    "tough", "noisy", "sturdy", "profound", "weighty", "broad", "lengthy", "wealthy", "sharp", "sweet",
+    "dense", "watery", "new", "sleek", "high", "fully grown", "captivating", "murky", "vacant", "inexpensive",
+    "secure", "truthful", "unlocked", "living", "well", "vacant", "effortless", "distant", "content", "clean",
+    "plain", "crystal clear", "ancient", "thin", "forward", "constricted", "economical", "courageous", "composed",
+    "exquisite", "wise", "courageous", "inventive", "charitable", "truthful", "vibrant", "compassionate", "tolerant",
+    "talented", "aspiring", "confident", "sympathetic", "reliable", "hopeful", "humble", "kind-hearted", "empathetic",
+    "resourceful", "outgoing", "faithful", "courteous", "industrious", "jovial", "selfreliant", "intelligent",
+    "charismatic", "accountable", "daring", "flexible", "thoughtful", "prompt", "empathetic", "passionate", "valiant",
+    "decisive", "tactful", "productive", "affable", "creative", "driven", "systematic", "insightful", "thoughtful", "tenacious",
+    "courteous", "accepting", "reliable"
+];
+document.addEventListener("DOMContentLoaded", function () {
+    setPlayerState('stare');
+    setEnemyState('stare');
+    spellCol = document.getElementById('magicCollision');
+    console.log(spellCol);
+    let magic = getRandomFile();
+    generateMagicAnimation(spellCol, magic, 64, 64, 0, 0, 15, 15);
+});
+
 EwordArray = EwordArray.map(function (word) {
     return word.toUpperCase();
 });
 PwordArray = PwordArray.map(function (word) {
     return word.toUpperCase();
 });
+synArray = synArray.map(function (word) {
+    return word.toUpperCase();
+});
 pCurrState = '';
 eCurrState = ''
-index = 0;
+index = Math.floor(Math.random() * PwordArray.length);
 var roundCount = 0;
 var enemy_attack_pos = 0;
 var player_attack_pos = 0;
 var counterOpportunity = false
 var box;
+let health = 3;
+var currentRule = 0;
+
 function setPlayerState(newState) {
     pCurrState = newState;
     switch (pCurrState) {
@@ -106,15 +164,40 @@ function generateAnimation(canvas, src, spriteW, spriteH, frameX, frameY, stagge
 
             else frameX = initFrame;
         }
-        gameFrame++;/**/
+        gameFrame++;
+        requestAnimationFrame(animate);
+    }
+    animate()
+}
+function generateMagicAnimation(canvas, src, spriteW, spriteH, frameX, frameY, staggerFrames, maxFrame) {
+
+    let ctx = canvas.getContext('2d');
+    let initFrame = frameX
+    /*canvas.width = 1.5 * 65;
+    canvas.height = 1.5 * 56;*/
+    canvas.width = 150;
+    canvas.height = 150;
+    let gameFrame = 0;
+    CANVAS_HEIGHT = canvas.width;
+    CANVAS_WIDTH = canvas.height;
+    const playerImg = new Image();
+    playerImg.src = src;
+    function animate() {
+        ctx.imageSmoothingEnabled = false;
+        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        ctx.drawImage(playerImg, frameX * spriteW, frameY * spriteH, spriteW, spriteH, 0, 0, spriteW * 3, spriteH * 3);
+        if (gameFrame % staggerFrames == 0) {
+
+            if (frameX < maxFrame - 1) { frameX++; }
+
+            else frameX = initFrame;
+        }
+        gameFrame++;
         requestAnimationFrame(animate);
     }
     animate()
 }
 // Example usage
-
-
-
 
 function createPlayerLetter(word) {
     pContinueOrbit = true;
@@ -137,6 +220,7 @@ var pContinueOrbit = true;
 var eContinueOrbit = true;
 var commonPlayer = [0];
 var selectedRule;
+var pLetterInitialPosition = [];
 function startCountdown() {
     showHeartsOneByOne();
     setPlayerState('idle');
@@ -184,7 +268,6 @@ function startCountdown() {
     // Stop the countdown after 3 seconds (adjust as needed)
     setTimeout(function () {
         clearInterval(countdownInterval);
-        //setInterval(randomizeRulePosition, 4000);
     }, 3000);
 
 }
@@ -249,9 +332,6 @@ function PcreateOrbit(radiusX, radiusY, letter, orbitContainer) {
 
 function generateRandomEllipticalRotation(word, lettersData) {
 
-    // Calculate the total number of characters in the word
-    var totalCharacters = word.length;
-
     // Split the word into an array of characters
     var characters = word.split('');
     var usedRadius = 0;
@@ -281,17 +361,26 @@ function randomizeRulePosition() {
     var rules = document.querySelectorAll('.rule');
 
     // Generate a random number between 1 and 4
-    var randomIndex = Math.floor(Math.random() * 4) + 1;
-
+    var randomIndex = Math.floor(Math.random() * 2) + 1;
     setTimeout(function () {
         selectedRule = rules[randomIndex - 1]; // Adjust index to match array (0-based)
+        if (selectedRule.textContent === "Syn") {
+            createEnemyLetter(PwordArray[index]);
+            //createPlayerLetter(synArray[index]);
+            createPlayerLetter("TEST");
+
+        } else if (selectedRule.textContent === "Ant") {
+            createEnemyLetter(EwordArray[index]);
+            //createPlayerLetter(PwordArray[index]);
+            createPlayerLetter("TEST");
+        }
+
+        currentRule = selectedRule;
         selectedRule.style.position = 'absolute';
         selectedRule.style.top = '-50vh';
         selectedRule.style.left = '50%';
         selectedRule.style.transform = 'translate(-50%, -50%)';
     }, 1000);
-
-
 }
 
 function cancelRulePosition(selectedRule) {
@@ -301,9 +390,18 @@ function cancelRulePosition(selectedRule) {
     selectedRule.style.transform = 'initial';
 }
 function round() {
+    console.log("new round" + roundCount);
     pAnswer = [];
+    currentRule = [];
+    if (roundCount === 0) {
+        randomizeRulePosition();
 
-    if (roundCount < 5) {
+        setTimeout(function () {
+            setEnemyState("attack");
+            cancelOrbit();
+        }, 2000);
+    }
+    else if ((roundCount < 5) && (roundCount != 0)) {
         if (selectedRule !== null) {
             cancelRulePosition(selectedRule);
         }
@@ -314,38 +412,38 @@ function round() {
                 cancelOrbit();
             }, 2000);
         }, 3000);
-    } else {
-        console.log(roundCount + " is over");
+    }
+    else if (roundCount === 5) {
+        youWin();
     }
 }
-
+var result;
 function cancelOrbit() {
     var filler = document.getElementById("filler");
     filler.style.display = 'inline-block';
     eContinueOrbit = false;
     counterOpportunity = true;
-    eWordFormation(-100, document.getElementById('eOrbitContainer'));
-    console.log("in");
+    result = eWordFormation(-100, document.getElementById('eOrbitContainer'));
+
 }
 function getAllChildren(container) {
     var children = container.children;
     return Array.from(children);
 }
-
+var playerAtTimer;
 function eWordFormation(commonX, orbitContainer) {
     var rotatingLetterElements = getAllChildren(orbitContainer);
     var screenHeight = window.innerHeight;
     var letterHeight = rotatingLetterElements.length > 0 ? rotatingLetterElements[0].offsetHeight : 0;
     var middleIndex = Math.floor(rotatingLetterElements.length / 2);
     var iterationCount = 0;
+    var timeouts = []; // Array to store timeout IDs
 
     var filler = document.getElementById('filler');
     filler.style.visibility = 'visible';
 
-
-
     rotatingLetterElements.forEach(function (element, index) {
-        setTimeout(function () {
+        var timeoutId = setTimeout(function () {
             var offsetFromMiddle = index - middleIndex;
             var offsetY = (screenHeight / 6) - (letterHeight / 2) + offsetFromMiddle * letterHeight;
             element.style.position = 'absolute';
@@ -355,20 +453,34 @@ function eWordFormation(commonX, orbitContainer) {
             element.classList.add('rotating-letter');
             iterationCount++;
             if (iterationCount === rotatingLetterElements.length) {
-
-                attackPlayer(rotatingLetterElements);
+                playerAtTimer = attackPlayer(rotatingLetterElements);
             }
         }, index * 1000);
+
+        timeouts.push(timeoutId); // Store the timeout ID
     });
 
+    // Function to cancel all timeouts
+    function cancelTimeouts() {
+        timeouts.forEach(function (timeoutId) {
+            clearTimeout(timeoutId);
+        });
+    }
+
+    // Return the rotatingLetterElements and cancelTimeouts function
+    return {
+        rotatingLetterElements: rotatingLetterElements,
+        cancelTimeouts: cancelTimeouts
+    };
 }
 
-
+var wordTimer = [];
 function pWordFormation(commonX, eventKey) {
     var orbitContainer = document.getElementById('pOrbitContainer');
 
     var foundElement = findFirstLetterElement(orbitContainer, eventKey);
     if (foundElement) {
+        getLetterPositions(foundElement);
         pAnswer.push(foundElement); // Add the found element to pAnswer array
         var offsetY = 15;
         foundElement.style.position = 'absolute';
@@ -377,6 +489,22 @@ function pWordFormation(commonX, eventKey) {
         commonPlayer[0] += offsetY + 20;
         foundElement.classList.add('rotating-letter');
     }
+    var timer = setInterval(function () {
+        if (checkOverlap()) {
+            eLettersData = [];
+            pLettersData = [];
+            attackFinish();
+            cancelRulePosition(selectedRule);
+            counterOpportunity = false;
+            index++
+            roundCount++;
+            round();
+            decreaseHealth();
+            console.log("health decrease");
+            clearInterval(timer);
+        }
+    }, 10); // Adjust the interval as needed
+    return timer;
 }
 
 function findFirstLetterElement(container, targetLetter) {
@@ -394,29 +522,41 @@ function findFirstLetterElement(container, targetLetter) {
 function attackPlayer(rotatingLetterElements) {
     eLettersData = [];
     pLettersData = [];
+    var checker = 0;
     var timer = setInterval(function () {
-        var allReached = true;
+        var allReached = false;
         rotatingLetterElements.forEach(function (element) {
             var currentPosition = parseInt(element.style.left || '0', 10);
             var newPosition = currentPosition - 10;
-            if (newPosition > -800) {
+            checker = newPosition;
+            if (newPosition > -900) {
                 element.style.left = newPosition + 'px';
                 allReached = false; // If any element hasn't reached the target, set the flag to false
+            } else {
+                allReached = true;
             }
         });
-        if (allReached) {
-            rotatingLetterElements.forEach(function (element) {
-                attackFinish(element);
-            });
+        if (checkOverlap()) {
+            result.cancelTimeouts();
             clearInterval(timer);
-            counterOpportunity = false;
-            index++
-            createPlayerLetter(PwordArray[index]);
-            createEnemyLetter(EwordArray[index]);
-            roundCount++;
-            round();
+        }
+        if (checker === -900) {
+            if (wordTimer.length === 0) {
+                eLettersData = [];
+                pLettersData = [];
+                attackFinish();
+                cancelRulePosition(selectedRule);
+                counterOpportunity = false;
+                index++
+                roundCount++;
+                round();
+                decreaseHealth();
+                console.log("health decrease");
+                clearInterval(timer);/**/
+            }
         }
     }, 10); // Adjust the interval as needed
+    return timer;
 }
 
 function attackEnemy(targetPosition, increment) {
@@ -432,17 +572,33 @@ function attackEnemy(targetPosition, increment) {
 
         });
         if (checkOverlap()) {
-            var rotatingLetterElements = getAllChildren(document.getElementById('eOrbitContainer'));
-            rotatingLetterElements.forEach(function (element) {
-                attackFinish(element);
-            });
+            clearInterval(playerAtTimer);
+            eLettersData = [];
+            pLettersData = [];
+            attackFinish();
             cancelRulePosition(selectedRule);
-        }
-
-        if (allReached) {
+            counterOpportunity = false;
+            index++
+            roundCount++;
+            round();
+        } else if (allReached) {
             clearInterval(timer);
         }
     }, 10); // Adjust the interval as needed
+}
+
+function returnWord(letter) {
+    if (pLetterInitialPosition.length > 0) {
+        // Get the last position from pLetterInitialPosition array
+        var lastPosition = pLetterInitialPosition[pLetterInitialPosition.length - 1];
+
+        // Extract x and y coordinates from the last position
+        var newX = lastPosition[0];
+        var newY = lastPosition[1];
+        letter.style.left = newX + "px";
+        letter.style.top = newY + "px";
+        pLetterInitialPosition.pop();
+    }
 }
 
 function handleKeyDown(event) {
@@ -450,66 +606,86 @@ function handleKeyDown(event) {
         if (event.key === "Enter") {
             pContinueOrbit = false;
             var combinedText = pAnswer.map(function (element) { return element.textContent; }).join('');
-            console.log(combinedText + "\n" + PwordArray[index]);
-            if (combinedText === PwordArray[index]) {
-                attackEnemy(1000, 10);
-            } else {
-                console.log("wrong word");
+            if (currentRule.textContent === "Ant") {
+                /*if (combinedText === PwordArray[index]) {*/if (combinedText === "TEST") {
+                    wordTimer.forEach(function (timer) {
+                        clearInterval(timer);
+                    });
+                    attackEnemy(1000, 10);
+                } else {
+                    console.log("wrong word");
+                }
+            } else if (currentRule.textContent === "Syn") {
+                /*if (combinedText === synArray[index]) {*/if (combinedText === "TEST") {
+                    wordTimer.forEach(function (timer) {
+                        clearInterval(timer);
+                    });
+                    attackEnemy(1000, 10);
+                } else {
+                    console.log("wrong word");
+                }
             }
         } else {
             var keyFound = pLettersData.some(function (letterData) {
                 return letterData.letter === event.key.toUpperCase();
             });
+
             if (keyFound) {
-                //console.log("Key found in pLettersData");
                 pContinueOrbit = false;
-                pWordFormation(250, event.key);
+                wordTimer.push(pWordFormation(250, event.key));
                 setPlayerState("attack");
             } else {
-                //console.log("Key not found in pLettersData");
                 // Perform the desired action when the key is not found
             }
+        } if (event.key === "Backspace") {
+            if (pAnswer.length > 0) {
+                commonPlayer[0] -= 35;
+                returnWord(pAnswer[pAnswer.length - 1]);
+                pAnswer.pop();
+            };
         }
+
     }
+
 }
 
-function attackFinish(element) {
-    var container = document.getElementById('pOrbitContainer');
-    while (container.firstChild) {
-        container.removeChild(container.firstChild);
+function attackFinish() {
+    result.cancelTimeouts();
+    var pcontainer = document.getElementById('pOrbitContainer');
+    var eContainer = document.getElementById('eOrbitContainer');
+    while (pcontainer.firstChild) {
+        pcontainer.removeChild(pcontainer.firstChild);
+    }
+    while (eContainer.firstChild) {
+        eContainer.removeChild(eContainer.firstChild);
     }
     var filler = document.getElementById("filler");
     filler.style.display = 'none';
     setEnemyState("idle");
     commonPlayer[0] = 0;
     setPlayerState("idle");
-    element.remove();
 }
 
-
+function getLetterPositions(child) {
+    var parentRect = child.parentElement.getBoundingClientRect();
+    var rect = child.getBoundingClientRect();
+    var position = [rect.left - parentRect.left, rect.top - parentRect.top];
+    pLetterInitialPosition.push(position);
+}
 
 function checkOverlap() {
     var container1 = document.getElementById("pOrbitContainer");
     var container2 = document.getElementById("eOrbitContainer");
-
     if (!container1.children[0] || !container2.children[0]) {
-        // One or both of the containers don't have a child element
         return false; // No overlap possible
     }
-
     var child1 = container1.children[0]; // Get the first child element
     var child2 = container2.children[0]; // Get the first child element
 
     var rect1 = child1.getBoundingClientRect(); // Get the bounding rectangle of the first child of container1
     var rect2 = child2.getBoundingClientRect(); // Get the bounding rectangle of the first child of container2
-
-    // Check for overlap
-    var overlap = !(rect1.right < rect2.left ||
-        rect1.left > rect2.right ||
-        rect1.bottom < rect2.top ||
-        rect1.top > rect2.bottom);
-
-    return overlap;
+    var overlapX = !(rect1.right < rect2.left || rect1.left > rect2.right);
+    return overlapX;
 }
 
 function showHeartsOneByOne() {
@@ -529,11 +705,73 @@ function showHeartsOneByOne() {
         }
     }, 1000);
 }
+
+function decreaseHealth() {
+    let heart;
+    switch (health) {
+        case 3:
+            heart = document.querySelector('.heart:nth-child(1)');
+            heart.querySelector('.c2').style.backgroundColor = 'rgb(143, 143, 143)';
+            heart.querySelector('.r').style.backgroundColor = 'rgb(143, 143, 143)';
+            break;
+        case 2:
+            heart = document.querySelector('.heart:nth-child(2)');
+            heart.querySelector('.c2').style.backgroundColor = 'rgb(143, 143, 143)';
+            heart.querySelector('.r').style.backgroundColor = 'rgb(143, 143, 143)';
+            break;
+        case 1:
+            heart = document.querySelector('.heart:nth-child(3)');
+            heart.querySelector('.c2').style.backgroundColor = 'rgb(143, 143, 143)';
+            heart.querySelector('.r').style.backgroundColor = 'rgb(143, 143, 143)';
+            gameOver();
+            break;
+        default:
+            break;
+    }
+    health--;
+}
+
+function youWin() {
+    pContinueOrbit = false;
+    eContinueOrbit = false;
+    roundCount = 10;
+    const playButton = document.getElementById('playBut');
+    const youWinTitle = document.getElementById('youWin');
+    youWinTitle.style.display = 'block';
+    document.querySelectorAll('body > *:not(#playBut):not(#youWin)').forEach(element => {
+        element.remove();
+    });
+    playButton.style.display = 'block';
+    playButton.textContent = 'Replay';
+
+    playButton.onclick = newGame;
+
+}
+
+function gameOver() {
+    pContinueOrbit = false;
+    eContinueOrbit = false;
+    roundCount = 10;
+    const playButton = document.getElementById('playBut');
+    document.querySelectorAll('body > *:not(#playBut):not(#gameOver)').forEach(element => {
+        element.remove();
+    });
+    playButton.style.display = 'block';
+    playButton.textContent = 'Replay';
+    var gameOverTitle = document.getElementById('gameOver');
+    gameOverTitle.style.display = 'block';
+    playButton.onclick = newGame;
+}
+
+function newGame() {
+    window.location.reload();
+}
 document.addEventListener("keydown", handleKeyDown);
-document.addEventListener("DOMContentLoaded", function () {
-    setPlayerState('stare');
-    setEnemyState('stare');
-    randomizeRulePosition();
-    createEnemyLetter(EwordArray[index]);
-    createPlayerLetter(PwordArray[index]);
-}); 
+
+function getRandomFile() {
+    const randomIndex = Math.floor(Math.random() * 160);
+    let randomSpell = './Lmage/magicCollision/' + randomIndex + '.png';
+    spellCol.src = randomSpell;
+    return randomSpell;
+}
+
