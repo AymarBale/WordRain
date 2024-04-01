@@ -1,0 +1,9 @@
+magic 
+{
+	get random spell 
+	animate the spell
+}
+background
+add a trail to the letter
+add a animation to the rules
+case to seleted letter

@@ -50,10 +50,7 @@ var synArray = [
 document.addEventListener("DOMContentLoaded", function () {
     setPlayerState('stare');
     setEnemyState('stare');
-    spellCol = document.getElementById('magicCollision');
-    console.log(spellCol);
-    let magic = getRandomFile();
-    generateMagicAnimation(spellCol, magic, 64, 64, 0, 0, 15, 15);
+
 });
 
 EwordArray = EwordArray.map(function (word) {
@@ -170,13 +167,11 @@ function generateAnimation(canvas, src, spriteW, spriteH, frameX, frameY, stagge
     animate()
 }
 function generateMagicAnimation(canvas, src, spriteW, spriteH, frameX, frameY, staggerFrames, maxFrame) {
-
+    console.log("inside");
     let ctx = canvas.getContext('2d');
-    let initFrame = frameX
-    /*canvas.width = 1.5 * 65;
-    canvas.height = 1.5 * 56;*/
-    canvas.width = 150;
-    canvas.height = 150;
+    let initFrame = frameX;
+    canvas.width = 325;
+    canvas.height = 325;
     let gameFrame = 0;
     CANVAS_HEIGHT = canvas.width;
     CANVAS_WIDTH = canvas.height;
@@ -185,15 +180,23 @@ function generateMagicAnimation(canvas, src, spriteW, spriteH, frameX, frameY, s
     function animate() {
         ctx.imageSmoothingEnabled = false;
         ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-        ctx.drawImage(playerImg, frameX * spriteW, frameY * spriteH, spriteW, spriteH, 0, 0, spriteW * 3, spriteH * 3);
+        ctx.drawImage(playerImg, frameX * spriteW, frameY * spriteH, spriteW, spriteH, 0, 0, spriteW * 5, spriteH * 5);
         if (gameFrame % staggerFrames == 0) {
-
-            if (frameX < maxFrame - 1) { frameX++; }
-
+            if (frameX < 7) {
+                frameX++;
+            } else if ((frameX === 7) && (frameY < 3)) {
+                frameY += 1;
+                frameX = 0;
+            }
             else frameX = initFrame;
         }
         gameFrame++;
-        requestAnimationFrame(animate);
+        if (frameY < 3) {
+            requestAnimationFrame(animate);
+        } else {
+            canvas.style.display = "none";
+        }
+
     }
     animate()
 }
@@ -365,11 +368,13 @@ function randomizeRulePosition() {
     setTimeout(function () {
         selectedRule = rules[randomIndex - 1]; // Adjust index to match array (0-based)
         if (selectedRule.textContent === "Syn") {
+            console.log(PwordArray[index]);
             createEnemyLetter(PwordArray[index]);
             //createPlayerLetter(synArray[index]);
             createPlayerLetter("TEST");
 
         } else if (selectedRule.textContent === "Ant") {
+
             createEnemyLetter(EwordArray[index]);
             //createPlayerLetter(PwordArray[index]);
             createPlayerLetter("TEST");
@@ -390,7 +395,7 @@ function cancelRulePosition(selectedRule) {
     selectedRule.style.transform = 'initial';
 }
 function round() {
-    console.log("new round" + roundCount);
+
     pAnswer = [];
     currentRule = [];
     if (roundCount === 0) {
@@ -560,18 +565,20 @@ function attackPlayer(rotatingLetterElements) {
 }
 
 function attackEnemy(targetPosition, increment) {
+    let checker = 0;
     var timer = setInterval(function () {
         var allReached = true;
         pAnswer.forEach(function (element) {
             var currentPosition = parseInt(element.style.left || '0', 10);
             var newPosition = currentPosition + 10;
+            checker = newPosition;
             if (newPosition <= targetPosition) {
                 element.style.left = newPosition + 'px';
                 allReached = false; // If any element hasn't reached the target, set the flag to false
             }
-
         });
         if (checkOverlap()) {
+            callMagicCol(checker);
             clearInterval(playerAtTimer);
             eLettersData = [];
             pLettersData = [];
@@ -602,6 +609,7 @@ function returnWord(letter) {
 }
 
 function handleKeyDown(event) {
+    callMagicCol(250);
     if (counterOpportunity) {
         if (event.key === "Enter") {
             pContinueOrbit = false;
@@ -770,8 +778,20 @@ document.addEventListener("keydown", handleKeyDown);
 
 function getRandomFile() {
     const randomIndex = Math.floor(Math.random() * 160);
-    let randomSpell = './Lmage/magicCollision/' + randomIndex + '.png';
+    const trying = 2;
+    //let randomSpell = './Lmage/magicCollision/' + randomIndex + '.png';
+    let randomSpell = './Lmage/magicCollision/' + trying + '.png';
     spellCol.src = randomSpell;
     return randomSpell;
+}
+
+function callMagicCol(posX) {
+    spellCol = document.getElementById('magicCollision');
+    spellCol.style.top = 200 + 'px';
+    spellCol.style.left = posX + 'px';
+
+    spellCol.style.display = "inline-block";
+    let magic = getRandomFile();
+    generateMagicAnimation(spellCol, magic, 64, 64, 0, 0, 6, 15);
 }
 
